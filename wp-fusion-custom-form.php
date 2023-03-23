@@ -1,3 +1,26 @@
+<?php 
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $productRepository = $objectManager->get('\Magento\Catalog\Api\ProductRepositoryInterface');
+    $attributeRepository = $objectManager->get('\Magento\Eav\Api\AttributeRepositoryInterface');
+    $brandAttribute = $attributeRepository->get('catalog_product', 'brand');
+    $options = $brandAttribute->getOptions();
+?>
+<ul>
+    <?php foreach ($options as $option): ?>
+        <li><a href="<?php echo $block->escapeUrl($block->getBaseUrl().'*/*/*').'?brand='.$option->getValue() ?>"><?php echo $option->getLabel() ?></a></li>
+    <?php endforeach; ?>
+</ul>
+
+
+<?php
+    $brand = $block->getRequest()->getParam('brand');
+    $collection = $block->getLoadedProductCollection();
+    if ($brand) {
+        $collection->addAttributeToFilter('brand', array('eq' => $brand));
+    }
+?>
+
+
 
 <?php
 <?php if ($_productCollection && $_productCollection->getSize()): ?>

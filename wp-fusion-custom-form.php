@@ -5,6 +5,22 @@
     $brandAttribute = $attributeRepository->get('catalog_product', 'brand');
     $options = $brandAttribute->getOptions();
 ?>
+<select name="brand" onchange="window.location.href = '<?php echo $block->escapeUrl($block->getBaseUrl().'*/*/*') ?>?brand=' + this.value;">
+    <option value="">Filter by brand</option>
+    <?php foreach ($options as $option): ?>
+        <option value="<?php echo $option->getValue() ?>"><?php echo $option->getLabel() ?></option>
+    <?php endforeach; ?>
+</select>
+
+
+
+<?php 
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $productRepository = $objectManager->get('\Magento\Catalog\Api\ProductRepositoryInterface');
+    $attributeRepository = $objectManager->get('\Magento\Eav\Api\AttributeRepositoryInterface');
+    $brandAttribute = $attributeRepository->get('catalog_product', 'brand');
+    $options = $brandAttribute->getOptions();
+?>
 <ul>
     <?php foreach ($options as $option): ?>
         <li><a href="<?php echo $block->escapeUrl($block->getBaseUrl().'*/*/*').'?brand='.$option->getValue() ?>"><?php echo $option->getLabel() ?></a></li>

@@ -1,5 +1,19 @@
 
 <?php
+<?php if ($_productCollection && $_productCollection->getSize()): ?>
+    <div class="products-grid">
+        <?php foreach ($_productCollection as $_product): ?>
+            <div class="product-item">
+                <a href="<?php echo $_product->getProductUrl() ?>" title="<?php echo $this->escapeHtml($_product->getName()) ?>">
+                    <img src="<?php echo $this->helper('Magento\Catalog\Helper\Image')->init($_product, 'category_page_grid')->resize(240, 300)->getUrl(); ?>" alt="<?php echo $this->escapeHtml($_product->getName()) ?>">
+                    <h2 class="product-name"><?php echo $this->escapeHtml($_product->getName()) ?></h2>
+                    <span class="price"><?php echo $this->helper('Magento\Framework\Pricing\Helper\Data')->currency($_product->getPrice()) ?></span>
+                </a>
+            </div>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+
 
 
 if ( ! defined( 'ABSPATH' ) ) {

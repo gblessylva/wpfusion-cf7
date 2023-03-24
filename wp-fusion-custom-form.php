@@ -1,5 +1,5 @@
 <div class="count">
-    Showing <?php echo $collection->getFirstItemNum() ?> - <?php echo $collection->getLastItemNum() ?> of <?php echo $collection->getSize() ?> products
+    Showing <?php echo $collection->getCurPage() * $collection->getPageSize() - $collection->getPageSize() + 1 ?> - <?php echo min($collection->getCurPage() * $collection->getPageSize(), $collection->getSize()) ?> of <?php echo $collection->getSize() ?> products
 </div>
 <!-- Start -->
 <?php

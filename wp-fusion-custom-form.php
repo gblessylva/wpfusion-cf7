@@ -1,3 +1,22 @@
+<?php
+    /** @var \Magento\Catalog\Block\Product\ListProduct $block */
+    $block = $this->getLayout()->getBlock('product_list');
+    $toolbar = $block->getToolbarBlock();
+    $collection = $block->getLoadedProductCollection();
+
+    if ($collection->getSize()) {
+        $pager = $block->getLayout()->createBlock(\Magento\Theme\Block\Html\Pager::class, 'custom.pager')
+            ->setAvailableLimit([10 => 10, 20 => 20, 50 => 50])
+            ->setShowPerPage(true)
+            ->setShowAmounts(true)
+            ->setPageVarName('page')
+            ->setLimitVarName('limit')
+            ->setCollection($collection);
+        echo $pager->toHtml();
+    }
+?>
+
+
 <?php 
     $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
     $productRepository = $objectManager->get('\Magento\Catalog\Api\ProductRepositoryInterface');

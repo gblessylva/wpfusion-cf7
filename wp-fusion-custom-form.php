@@ -1,3 +1,72 @@
+<div class="sort-by">
+    <label for="sort-by-select"><?php echo __('Sort By:') ?></label>
+    <select id="sort-by-select">
+        <option value="price-desc"><?php echo __('Price: High to Low') ?></option>
+        <option value="price-asc"><?php echo __('Price: Low to High') ?></option>
+        <option value="name-asc"><?php echo __('Name: A to Z') ?></option>
+        <option value="name-desc"><?php echo __('Name: Z to A') ?></option>
+        <option value="date-desc"><?php echo __('Newest to Oldest') ?></option>
+    </select>
+</div>
+
+<script type="text/javascript">
+    document.getElementById("sort-by-select").onchange = function() {
+        var urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('product_list_order', this.value);
+        window.location.search = urlParams.toString();
+    };
+</script>
+
+<?php
+    $productListOrder = $this->getRequest()->getParam('product_list_order');
+    if (!$productListOrder) {
+        $productListOrder = 'price-desc';
+    }
+    $sortType = '';
+    $sortDirection = '';
+    switch ($productListOrder) {
+        case 'price-desc':
+            $sortType = 'price';
+            $sortDirection = 'desc';
+            break;
+        case 'price-asc':
+            $sortType = 'price';
+            $sortDirection = 'asc';
+            break;
+        case 'name-asc':
+            $sortType = 'name';
+            $sortDirection = 'asc';
+            break;
+        case 'name-desc':
+            $sortType = 'name';
+            $sortDirection = 'desc';
+            break;
+        case 'date-desc':
+            $sortType = 'created_at';
+            $sortDirection = 'desc';
+            break;
+        default:
+            $sortType = 'price';
+            $sortDirection = 'desc';
+            break;
+    }
+    $collection = $block->getLoadedProductCollection();
+    $collection->clear()->getSelect()->reset(\Zend_Db_Select::ORDER);
+    $collection->addAttributeToSort($sortType, $sortDirection);
+    $collection->load();
+?>
+
+<div class="count"><?php echo __('Showing %1 of %2', $collection->getFirstItemNum(), $collection->getLastItemNum()) ?></div>
+
+<div class="products-grid">
+    <?php foreach ($collection as $product): ?>
+        <!-- Product card HTML here -->
+    <?php endforeach; ?>
+</div>
+
+
+<!-- CODE TO SORT -->
+
 <div class="count">
     Showing <?php echo $collection->getCurPage() * $collection->getPageSize() - $collection->getPageSize() + 1 ?> - <?php echo min($collection->getCurPage() * $collection->getPageSize(), $collection->getSize()) ?> of <?php echo $collection->getSize() ?> products
 </div>

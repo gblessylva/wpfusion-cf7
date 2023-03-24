@@ -1,3 +1,6 @@
+<div class="count">
+    Showing <?php echo $collection->getFirstItemNum() ?> - <?php echo $collection->getLastItemNum() ?> of <?php echo $collection->getSize() ?> products
+</div>
 <!-- Start -->
 <?php
     /** @var \Magento\Catalog\Block\Product\ListProduct $block */

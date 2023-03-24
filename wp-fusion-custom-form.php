@@ -31,6 +31,7 @@
     </ol>
 </div>
 
+
 <?php
     /** @var \Magento\Catalog\Block\Product\ListProduct $block */
     $block = $this->getLayout()->getBlock('product_list');

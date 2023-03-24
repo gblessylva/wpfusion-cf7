@@ -1,3 +1,50 @@
+<!-- Start -->
+<?php
+    /** @var \Magento\Catalog\Block\Product\ListProduct $block */
+    $block = $this->getLayout()->getBlock('category.products.list');
+    $toolbar = $block->getToolbarBlock();
+    $collection = $block->getLoadedProductCollection();
+
+    if ($collection->getSize()) {
+        $pager = $block->getLayout()->createBlock(\Magento\Theme\Block\Html\Pager::class, 'custom.pager')
+            ->setAvailableLimit([10 => 10, 20 => 20, 50 => 50])
+            ->setShowPerPage(true)
+            ->setShowAmounts(true)
+            ->setPageVarName('page')
+            ->setLimitVarName('limit')
+            ->setCollection($collection);
+        echo $pager->toHtml();
+    }
+?>
+<div class="products-grid">
+    <ol class="products-list" id="products-list">
+        <?php foreach ($block->getLoadedProductCollection() as $_product): ?>
+            <li class="product-item">
+                <strong class="product-item-name">
+                    <a href="<?php echo $_product->getProductUrl() ?>"><?php echo $_product->getName() ?></a>
+                </strong>
+                <?php echo $block->getProductPrice($_product) ?>
+                <?php echo $_product->getShortDescription() ?>
+            </li>
+        <?php endforeach ?>
+    </ol>
+</div>
+<div class="navigation">
+    <?php if ($pager->getCurrentPage() > 1) : ?>
+        <a href="<?php echo $pager->getPreviousPageUrl() ?>">Prev</a>
+    <?php endif; ?>
+    <?php for ($i = 1; $i <= $pager->getLastPageNum(); $i++) : ?>
+        <?php if ($pager->getCurrentPage() == $i) : ?>
+            <strong><?php echo $i ?></strong>
+        <?php else: ?>
+            <a href="<?php echo $pager->getPageUrl($i) ?>"><?php echo $i ?></a>
+        <?php endif; ?>
+    <?php endfor; ?>
+    <?php if ($pager->getCurrentPage() < $pager->getLastPageNum()) : ?>
+        <a href="<?php echo $pager->getNextPageUrl() ?>">Next</a>
+    <?php endif; ?>
+</div>
+<!--  end-->
 
 
 <?php

@@ -1,3 +1,36 @@
+
+
+<?php
+    /** @var \Magento\Catalog\Block\Product\ListProduct $block */
+    $block = $this->getLayout()->getBlock('category.products.list');
+    $toolbar = $block->getToolbarBlock();
+    $collection = $block->getLoadedProductCollection();
+
+    if ($collection->getSize()) {
+        $pager = $block->getLayout()->createBlock(\Magento\Theme\Block\Html\Pager::class, 'custom.pager')
+            ->setAvailableLimit([10 => 10, 20 => 20, 50 => 50])
+            ->setShowPerPage(true)
+            ->setShowAmounts(true)
+            ->setPageVarName('page')
+            ->setLimitVarName('limit')
+            ->setCollection($collection);
+        echo $pager->toHtml();
+    }
+?>
+<div class="products-grid">
+    <ol class="products-list" id="products-list">
+        <?php foreach ($block->getLoadedProductCollection() as $_product): ?>
+            <li class="product-item">
+                <strong class="product-item-name">
+                    <a href="<?php echo $_product->getProductUrl() ?>"><?php echo $_product->getName() ?></a>
+                </strong>
+                <?php echo $block->getProductPrice($_product) ?>
+                <?php echo $_product->getShortDescription() ?>
+            </li>
+        <?php endforeach ?>
+    </ol>
+</div>
+
 <?php
     /** @var \Magento\Catalog\Block\Product\ListProduct $block */
     $block = $this->getLayout()->getBlock('product_list');

@@ -1,3 +1,34 @@
+<nav class="nav-menu">
+    <ul>
+        <?php
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $categoryFactory = $objectManager->get('\Magento\Catalog\Model\CategoryFactory');
+        $categories = $categoryFactory->create()->getCollection()->addAttributeToSelect('*')->addIsActiveFilter();
+
+        foreach ($categories as $category) {
+            if ($category->getLevel() == 1) {
+                // Print main category
+                echo '<li><a href="' . $category->getUrl() . '">' . $category->getName() . '</a>';
+
+                // Get subcategories of main category
+                $subcategories = $category->getChildrenCategories();
+                if ($subcategories->count() > 0) {
+                    // Print subcategories
+                    echo '<ul class="submenu">';
+                    foreach ($subcategories as $subcategory) {
+                        echo '<li><a href="' . $subcategory->getUrl() . '">' . $subcategory->getName() . '</a></li>';
+                    }
+                    echo '</ul>';
+                }
+
+                echo '</li>';
+            }
+        }
+        ?>
+    </ul>
+</nav>
+
+
 <div class="sort-by">
     <label for="sort-by-select"><?php echo __('Sort By:') ?></label>
     <select id="sort-by-select">

@@ -1,3 +1,20 @@
+
+<form action="{{store url='catalogform/index/save'}}" method="post">
+    <!-- form fields go here -->
+    <button type="submit">Submit</button>
+</form>
+
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="standard">
+        <route id="catalogform" frontName="catalogform">
+            <module name="Vendor_Module" />
+        </route>
+    </router>
+</config>
+
+
+
 {{block class="Vendor\Module\Block\Form" template="Vendor_Module::form.phtml"}}
 
 

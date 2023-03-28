@@ -1,3 +1,7 @@
+{{block class="Vendor\Module\Block\Form" template="Vendor_Module::form.phtml"}}
+
+
+
 <nav class="nav-menu">
     <ul>
         <?php

@@ -1,3 +1,4 @@
+{{block class="Magento\Framework\View\Element\Template" name="custom.category.template" template="Vendor_Module::custom-category.phtml"}}
 
 <form action="{{store url='catalogform/index/save'}}" method="post">
     <!-- form fields go here -->

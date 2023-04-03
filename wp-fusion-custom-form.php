@@ -1,3 +1,18 @@
+
+
+<?xml version="1.0"?>
+<page layout="2columns-left" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+  <body>
+    <referenceBlock name="category.products.list">
+      <arguments>
+        <argument name="sort_by" xsi:type="string">brand</argument>
+        <argument name="sort_order" xsi:type="string">asc</argument>
+      </arguments>
+    </referenceBlock>
+  </body>
+</page>
+
+
 {{block class="Magento\Framework\View\Element\Template" name="custom.category.template" template="Vendor_Module::custom-category.phtml"}}
 
 <form action="{{store url='catalogform/index/save'}}" method="post">

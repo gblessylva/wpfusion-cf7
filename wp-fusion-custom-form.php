@@ -1,4 +1,126 @@
+<select onchange="setLocation(this.value)">
+    <option value="" <?php if (!$block->getRequest()->getParam('brand')): ?>selected="selected"<?php endif; ?>><?php echo __('Sort by'); ?></option>
+    <?php foreach ($brands as $brand): ?>
+        <?php $selected = ($block->getRequest()->getParam('brand') == $brand) ? 'selected="selected"' : ''; ?>
+        <option value="<?php echo $block->getSortUrl(['brand' => $brand]) ?>" <?php echo $selected ?>><?php echo $brand ?></option>
+    <?php endforeach; ?>
+</select>
+goes into phtml
+<?
+protected function getProductCollection()
+{
+    if ($this->_productCollection === null) {
+        $collection = parent::getProductCollection();
+        if ($this->getRequest()->getParam('brand')) {
+            $collection->addAttributeToSort('brand', $this->getRequest()->getParam('dir') ? $this->getRequest()->getParam('dir') : 'asc');
+        }
+        $this->_productCollection = $collection;
+    }
+    return $this->_productCollection;
+}
 
+?>
+<?php
+namespace Vendor\Module\Block\Product;
+
+use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
+use Magento\Catalog\Block\Product\ProductList\Toolbar as ToolbarModel;
+
+class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
+{
+    protected $_productCollectionFactory;
+    protected $_catalogLayer;
+ 
+    public function __construct(
+        \Magento\Catalog\Block\Product\Context $context,
+        \Magento\Framework\Data\Helper\PostHelper $postDataHelper,
+        \Magento\Catalog\Model\Layer\Resolver $layerResolver,
+        CollectionFactory $productCollectionFactory,
+        ToolbarModel $toolbar,
+        array $data = []
+    ) {
+        $this->_productCollectionFactory = $productCollectionFactory;
+        $this->_catalogLayer = $layerResolver->get();
+        $this->toolbar = $toolbar;
+        parent::__construct($context, $postDataHelper, $data);
+    }
+
+    protected function _getAvailableOrders()
+    {
+        $availableOrders = parent::_getAvailableOrders();
+        $availableOrders['brand'] = __('Brand');
+ 
+        return $availableOrders;
+    }
+ 
+    public function getBrands()
+    {
+        $attributeCode = 'brand';
+        $collection = $this->_productCollectionFactory->create();
+        $collection->addAttributeToSelect($attributeCode)
+            ->addGroupByAttribute($attributeCode)
+            ->addAttributeToSort($attributeCode);
+ 
+        $brands = array();
+        foreach ($collection as $product) {
+            $brand
+
+		     $brand = $product->getAttributeText('brand');
+    if ($brand) {
+        $brands[$brand] = $brand;
+    }
+}
+	    
+		    
+		    
+
+<?php
+namespace Vendor\Module\Block\Product;
+
+use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
+use Magento\Catalog\Block\Product\ProductList\Toolbar as ToolbarModel;
+
+class ListProduct extends \Magento\Catalog\Block\Product\ListProduct
+{
+    protected $_productCollectionFactory;
+    protected $_catalogLayer;
+ 
+    public function __construct(
+        \Magento\Catalog\Block\Product\Context $context,
+        \Magento\Framework\Data\Helper\PostHelper $postDataHelper,
+        \Magento\Catalog\Model\Layer\Resolver $layerResolver,
+        CollectionFactory $productCollectionFactory,
+        ToolbarModel $toolbar,
+        array $data = []
+    ) {
+        $this->_productCollectionFactory = $productCollectionFactory;
+        $this->_catalogLayer = $layerResolver->get();
+        $this->toolbar = $toolbar;
+        parent::__construct($context, $postDataHelper, $data);
+    }
+
+    public function getBrands()
+    {
+        $attributeCode = 'brand';
+        $collection = $this->_productCollectionFactory->create();
+        $collection->addAttributeToSelect($attributeCode)
+            ->addGroupByAttribute($attributeCode)
+            ->addAttributeToSort($attributeCode);
+ 
+        $brands = array();
+        foreach ($collection as $product) {
+            $brand = $product->getAttributeText($attributeCode);
+            if (!in_array($brand, $brands)) {
+                $brands[] = $brand;
+            }
+        }
+ 
+        return $brands;
+    }
+}
+
+
+// --------------
 
 <?xml version="1.0"?>
 <page layout="2columns-left" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">

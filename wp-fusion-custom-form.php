@@ -1,3 +1,94 @@
+Create a new file called BrandViewModel.php in your custom theme under app/code/[Vendor]/[Theme]/ViewModel/.
+
+Add the following code to the BrandViewModel.php file:
+
+<?php
+
+namespace [Vendor]\[Theme]\ViewModel;
+
+use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
+use Magento\Framework\App\RequestInterface;
+use Magento\Framework\View\Element\Block\ArgumentInterface;
+
+class BrandViewModel implements ArgumentInterface
+{
+    protected $request;
+    protected $collectionFactory;
+
+    public function __construct(
+        RequestInterface $request,
+        CollectionFactory $collectionFactory
+    ) {
+        $this->request = $request;
+        $this->collectionFactory = $collectionFactory;
+    }
+
+    public function getBrandCollection()
+    {
+        $brand = $this->request->getParam('brand');
+        $collection = $this->collectionFactory->create();
+        $collection->addAttributeToSelect('*');
+        $collection->addAttributeToFilter('brand', $brand);
+        $collection->setPageSize(9);
+        return $collection;
+    }
+
+    public function getBrandOptions()
+    {
+        $collection = $this->collectionFactory->create();
+        $collection->addAttributeToSelect('brand');
+        $collection->getSelect()->group('brand');
+        $options = array();
+        foreach ($collection as $product) {
+            $option = array(
+                'value' => $product->getData('brand'),
+                'label' => $product->getAttributeText('brand')
+            );
+            $options[] = $option;
+        }
+        return $options;
+    }
+}
+
+
+Open the product-list-navigation.phtml file in your custom theme's Magento_Catalog/templates/product/list/ directory.
+
+Add the following code to the file to instantiate the BrandViewModel:
+
+php
+Copy code
+<?php
+/** @var \[Vendor]\[Theme]\ViewModel\BrandViewModel $brandViewModel */
+$brandViewModel = $block->getData('brandViewModel');
+?>
+Add the following code to create the brand select dropdown:
+php
+Copy code
+<div class="brand-select">
+    <label for="brand-select"><?php /* @escapeNotVerified */ echo __('Brand') ?></label>
+    <select id="brand-select" onchange="location.href = this.value;">
+        <option value="<?php /* @escapeNotVerified */ echo $block->getUrl('*/*/*', ['_current' => true]) ?>" <?php if (!$block->getRequest()->getParam('brand')) : ?>selected="selected"<?php endif; ?>><?php /* @escapeNotVerified */ echo __('All Brands') ?></option>
+        <?php foreach ($brandViewModel->getBrandOptions() as $option) : ?>
+            <option value="<?php /* @escapeNotVerified */ echo $block->getUrl('*/*/*', ['_current' => true, 'brand' => $option['value']]) ?>" <?php if ($block->getRequest()->getParam('brand') == $option['value']) : ?>selected="selected"<?php endif; ?>><?php /* @escapeNotVerified */ echo $option['label'] ?></option>
+        <?php endforeach; ?>
+    </select>
+</div>
+Save the product-list-navigation.phtml file.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <?php
     $brandAttribute = $_productCollection->getAttribute('brand');
     if ($brandAttribute && $brandAttribute->usesSource()) {
@@ -8,7 +99,11 @@
         <label class="sort-by-brand-label" for="sort-by-brand-select"><?php echo __('Brand') ?></label>
         <select id="sort-by-brand-select" class="sort-by-brand-select"
                 onchange="setLocation(jQuery(this).val());">
-            <?php foreach ($options as $option): ?>
+
+
+
+
+<?php foreach ($options as $option): ?>
                 <option value="<?php echo $this->helper('Magento\Framework\Url')->getSortUrl(
                     $_productCollection,
                     ['brand' => $option['value']]

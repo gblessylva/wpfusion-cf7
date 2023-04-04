@@ -1,3 +1,26 @@
+<?php
+    $brandAttribute = $_productCollection->getAttribute('brand');
+    if ($brandAttribute && $brandAttribute->usesSource()) {
+        $options = $brandAttribute->getSource()->getAllOptions(false);
+        array_unshift($options, ['value' => '', 'label' => __('Sort by Brand')]);
+?>
+    <div class="sort-by-brand">
+        <label class="sort-by-brand-label" for="sort-by-brand-select"><?php echo __('Brand') ?></label>
+        <select id="sort-by-brand-select" class="sort-by-brand-select"
+                onchange="setLocation(jQuery(this).val());">
+            <?php foreach ($options as $option): ?>
+                <option value="<?php echo $this->helper('Magento\Framework\Url')->getSortUrl(
+                    $_productCollection,
+                    ['brand' => $option['value']]
+                ); ?>">
+                    <?php echo $option['label']; ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+<?php } ?>
+
+
 <select onchange="setLocation(this.value)">
     <option value="" <?php if (!$block->getRequest()->getParam('brand')): ?>selected="selected"<?php endif; ?>><?php echo __('Sort by'); ?></option>
     <?php foreach ($brands as $brand): ?>

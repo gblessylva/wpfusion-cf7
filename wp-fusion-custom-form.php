@@ -1,3 +1,5 @@
+if ($parentCategory->getId() === \Magento\Catalog\Model\Category::TREE_ROOT_ID) {
+
 <?php
 $breadcrumbs = $block->getLayout()->getBlock('breadcrumbs');
 $category = $block->getCurrentCategory();

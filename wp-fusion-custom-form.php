@@ -1,3 +1,147 @@
+Here are the steps to create a Magento 2 module that adds a manufacturer attribute:
+
+Create a new directory for the module in the app/code directory. For example, app/code/YourCompany/Manufacturer.
+Create a module.xml file in the app/code/YourCompany/Manufacturer/etc directory with the following code:
+xml
+Copy code
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+   <module name="YourCompany_Manufacturer" setup_version="1.0.0">
+   </module>
+</config>
+Create a registration.php file in the app/code/YourCompany/Manufacturer directory with the following code:
+php
+Copy code
+<?php
+\Magento\Framework\Component\ComponentRegistrar::register(
+    \Magento\Framework\Component\ComponentRegistrar::MODULE,
+    'YourCompany_Manufacturer',
+    __DIR__
+);
+Create a file called InstallData.php in the app/code/YourCompany/Manufacturer/Setup directory with the following code:
+php
+Copy code
+<?php
+namespace YourCompany\Manufacturer\Setup;
+use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
+use Magento\Catalog\Setup\CategorySetupFactory;
+use Magento\Eav\Model\Config;
+use Magento\Eav\Setup\EavSetupFactory;
+use Magento\Framework\Setup\ModuleContextInterface;
+use Magento\Framework\Setup\ModuleDataSetupInterface;
+use Magento\Framework\Setup\UpgradeDataInterface;
+use Magento\Framework\Setup\InstallDataInterface;
+use Magento\Framework\Setup\ModuleDataSetupInterface;
+
+class InstallData implements InstallDataInterface
+{
+    private $eavSetupFactory;
+    private $attributeSetFactory;
+    private $categorySetupFactory;
+    private $config;
+
+    public function __construct(EavSetupFactory $eavSetupFactory, \Magento\Eav\Model\Entity\Attribute\SetFactory $attributeSetFactory, CategorySetupFactory $categorySetupFactory, Config $config)
+    {
+        $this->eavSetupFactory = $eavSetupFactory;
+        $this->attributeSetFactory = $attributeSetFactory;
+        $this->categorySetupFactory = $categorySetupFactory;
+        $this->config = $config;
+    }
+
+    public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
+    {
+        $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
+        $attributeSetId = $this->categorySetupFactory->create()->getDefaultAttributeSetId(Product::ENTITY);
+
+        $eavSetup->addAttribute(Product::ENTITY, 'manufacturer', [
+            'type' => 'int',
+            'label' => 'Manufacturer',
+            'input' => 'select',
+            'required' => false,
+            'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_STORE,
+            'source' => 'YourCompany\Manufacturer\Model\Attribute\Source\Manufacturer',
+            'group' => 'General Information',
+            'attribute_set_id' => $attributeSetId,
+            'visible' => true,
+            'searchable' => false,
+            'filterable' => true,
+            'comparable' => false,
+            'user_defined' => true,
+            'visible_on_front' => true,
+            'used_in_product_listing' => true,
+            'unique' => false,
+        ]);
+    }
+}
+Create a file called Manufacturer.php in the
+
+
+
+Gbless Sylva
+continue
+Create a file called Manufacturer.php in the app/code/YourCompany/Manufacturer/Model/Attribute/Source directory with the following code:
+php
+Copy code
+<?php
+namespace YourCompany\Manufacturer\Model\Attribute\Source;
+
+use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
+use Magento\Framework\Data\OptionSourceInterface;
+use YourCompany\Manufacturer\Model\ResourceModel\Manufacturer\CollectionFactory;
+
+class Manufacturer extends AbstractSource implements OptionSourceInterface
+{
+    protected $collectionFactory;
+
+    public function __construct(CollectionFactory $collectionFactory)
+    {
+        $this->collectionFactory = $collectionFactory;
+    }
+
+    public function getAllOptions()
+    {
+        $options = [];
+
+        $collection = $this->collectionFactory->create();
+        $collection->addFieldToSelect('*');
+        $collection->addFieldToFilter('status', 1);
+        $collection->setOrder('name', 'ASC');
+
+        foreach ($collection as $manufacturer) {
+            $options[] = [
+                'value' => $manufacturer->getId(),
+                'label' => $manufacturer->getName(),
+            ];
+        }
+
+        return $options;
+    }
+}
+Create a file called di.xml in the app/code/YourCompany/Manufacturer/etc directory with the following code:
+xml
+Copy code
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+   <preference for="YourCompany\Manufacturer\Model\ResourceModel\Manufacturer\Collection" type="YourCompany\Manufacturer\Model\ResourceModel\Manufacturer\Collection" />
+   <preference for="YourCompany\Manufacturer\Model\Attribute\Source\Manufacturer" type="YourCompany\Manufacturer\Model\Attribute\Source\Manufacturer" />
+</config>
+Run the following commands in the Magento 2 root directory:
+bash
+Copy code
+bin/magento module:enable YourCompany_Manufacturer
+bin/magento setup:upgrade
+bin/magento cache:clean
+After following these steps, you should be able to see the manufacturer attribute in the product edit page. When you select a manufacturer from the dropdown, the attribute ID will be associated with the product.
+
+
+
+
+
+
+
+
+
 if ($parentCategory->getId() === \Magento\Catalog\Model\Category::TREE_ROOT_ID) {
 
 <?php

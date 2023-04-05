@@ -1,4 +1,43 @@
 <?php
+$breadcrumbs = $block->getLayout()->getBlock('breadcrumbs');
+$category = $block->getCurrentCategory();
+
+if ($breadcrumbs && $category) {
+    $breadcrumbs->addCrumb(
+        'home',
+        [
+            'label' => __('Home'),
+            'title' => __('Go to Home Page'),
+            'link' => $this->getUrl('')
+        ]
+    );
+
+    $parentCategories = $category->getParentCategories();
+    $categoryPath = [];
+    foreach ($parentCategories as $parent) {
+        if (!$parent->getIsActive()) {
+            continue;
+        }
+        $categoryPath[] = [
+            'label' => $parent->getName(),
+            'link' => $parent->getUrl()
+        ];
+    }
+
+    $categoryPath[] = [
+        'label' => $category->getName(),
+        'link' => ''
+    ];
+
+    foreach ($categoryPath as $key => $value) {
+        $breadcrumbs->addCrumb('category' . $key, $value);
+    }
+}
+?>
+
+
+
+<?php
     $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
     $category = $objectManager->create('Magento\Catalog\Model\Category')->load($categoryId);
     $breadcrumbCategories = $category->getParentCategories();

@@ -1,3 +1,34 @@
+<?php
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $category = $objectManager->create('Magento\Catalog\Model\Category')->load($categoryId);
+    $breadcrumbCategories = $category->getParentCategories();
+    $breadcrumbs = array();
+    foreach ($breadcrumbCategories as $category) {
+        if($category->getId() != 1) { // Exclude Root Category
+            $breadcrumbs[] = [
+                'label' => $category->getName(),
+                'url' => $category->getUrl()
+            ];
+        }
+    }
+    // Add Current Category
+    $breadcrumbs[] = ['label' => $category->getName(), 'title' => $category->getName()];
+?>
+
+<div class="breadcrumbs">
+    <?php foreach ($breadcrumbs as $breadcrumb) : ?>
+        <?php if (!$loop->last) : ?>
+            <a href="<?php echo $breadcrumb['url']; ?>"><?php echo $breadcrumb['label']; ?></a> &nbsp;&gt;&nbsp;
+        <?php else : ?>
+            <strong><?php echo $breadcrumb['label']; ?></strong>
+        <?php endif; ?>
+    <?php endforeach; ?>
+</div>
+
+
+
+
+
 Create a new file called BrandViewModel.php in your custom theme under app/code/[Vendor]/[Theme]/ViewModel/.
 
 Add the following code to the BrandViewModel.php file:

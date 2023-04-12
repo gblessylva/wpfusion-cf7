@@ -1,3 +1,13 @@
+$productOptions = $_product->getOptions();
+foreach ($productOptions as $options) {
+    $optionType = $options->getType();
+    $optionTitle = $options->getTitle();
+    $optionValues = $options->getValues();
+    //Do something with the product options
+}
+
+
+
 Create a magento 2 module called manufacturer that creates an attribute called manufacturer and is visible on the product edit page. If the attribute is selected, the attribute ID is associated with the product.
 
 As an AI language model, I cannot create a Magento 2 module. However, I can guide you on the steps to create a module that adds a new attribute called "manufacturer" visible on the product edit page in Magento 2.

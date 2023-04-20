@@ -1,3 +1,10 @@
+<referenceContainer name="content">
+    <block class="Magefan\Blog\Block\PostList" name="blog.post.list" template="[Vendor]_[Theme]::Magefan_Blog/templates/blog.phtml"/>
+</referenceContainer>
+
+
+
+
 $productOptions = $_product->getOptions();
 foreach ($productOptions as $options) {
     $optionType = $options->getType();

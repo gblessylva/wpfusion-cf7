@@ -4,6 +4,26 @@ $postCollectionFactory = $objectManager->get('Magefan\Blog\Model\ResourceModel\P
 $collection = $postCollectionFactory->create();
 $collection->addFieldToFilter('is_active', 1); // Filter by active status
 $collection->setOrder('publish_time', 'desc'); // Order by publish time
+$collection->setPageSize(10); // Return 10 posts per page
+$collection->setCurPage(1); // Skip the first page (10 posts)
+
+// Skip the first post and return the next 9 posts
+$collection->getSelect()->limit(9, 1);
+
+foreach ($collection as $post) {
+    echo '<a href="' . $post->getPostUrl() . '">' . $post->getTitle() . '</a><br>'; // Display post title and link
+    echo '<img src="' . $post->getFeaturedImage() . '"><br>'; // Display post featured image
+    echo $post->getPostContent() . '<br><br>'; // Display post content
+}
+?>
+
+
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$postCollectionFactory = $objectManager->get('Magefan\Blog\Model\ResourceModel\Post\CollectionFactory');
+$collection = $postCollectionFactory->create();
+$collection->addFieldToFilter('is_active', 1); // Filter by active status
+$collection->setOrder('publish_time', 'desc'); // Order by publish time
 $collection->setPageSize(10); // Return only the first 10 posts
 
 foreach ($collection as $post) {

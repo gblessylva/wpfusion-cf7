@@ -1,4 +1,17 @@
 <?php
+    $category = $block->getCurrentCategory();
+    $image = $category->getImageUrl();
+    $description = $category->getDescription();
+?>
+<div class="category-image">
+    <img src="<?php echo $image ?>" alt="<?php echo $category->getName() ?>" />
+</div>
+<div class="category-description">
+    <?php echo $description ?>
+</div>
+
+
+<?php
 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 $postCollectionFactory = $objectManager->get('Magefan\Blog\Model\ResourceModel\Post\CollectionFactory');
 $collection = $postCollectionFactory->create();

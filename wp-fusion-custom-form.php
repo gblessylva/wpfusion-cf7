@@ -1,3 +1,17 @@
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$postCollectionFactory = $objectManager->get('Magefan\Blog\Model\ResourceModel\Post\CollectionFactory');
+$collection = $postCollectionFactory->create();
+$collection->addFieldToFilter('is_active', 1); // Filter by active status
+$collection->setOrder('publish_time', 'desc'); // Order by publish time
+
+foreach ($collection as $post) {
+    echo $post->getTitle();
+    // Display other post data as needed
+}
+?>
+
+
 <referenceContainer name="content">
     <block class="Magefan\Blog\Block\PostList" name="blog.post.list" template="[Vendor]_[Theme]::Magefan_Blog/templates/blog.phtml"/>
 </referenceContainer>

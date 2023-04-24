@@ -1,4 +1,37 @@
 <?php
+namespace [Vendor]\My_Module\Setup;
+
+use Magento\Framework\Setup\SchemaSetupInterface;
+use Magento\Framework\Setup\ModuleContextInterface;
+use Magento\Framework\DB\Ddl\Table;
+
+class UpgradeSchema implements \Magento\Framework\Setup\UpgradeSchemaInterface
+{
+    public function upgrade(SchemaSetupInterface $setup, ModuleContextInterface $context)
+    {
+        $setup->startSetup();
+        
+        if (version_compare($context->getVersion(), '2.0.0', '<')) {
+            $setup->getConnection()->changeColumn(
+                $setup->getTable('my_table_name'),
+                'content',
+                'content',
+                [
+                    'type' => Table::TYPE_TEXT,
+                    'length' => 2000,
+                    'nullable' => true,
+                    'comment' => 'Content'
+                ]
+            );
+        }
+        
+        $setup->endSetup();
+    }
+}
+
+
+
+<?php
     $category = $block->getCurrentCategory();
     $image = $category->getImageUrl();
     $description = $category->getDescription();
